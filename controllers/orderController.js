@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const MenuItem = require("../models/MenuItem");
+const User = require("../models/User");
 
 // Create new order
 const createOrder = async (req, res) => {
@@ -74,6 +75,9 @@ const getOrderById = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
+    // console.log(req.body)
+
+    
 
     const order = await Order.findById(req.params.id);
 
@@ -81,7 +85,7 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    if (!["pending", "preparing", "served", "cancelled"].includes(status)) {
+    if (!["pending", "preparing", "ready", "on_the_way", "delivered", "completed"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
