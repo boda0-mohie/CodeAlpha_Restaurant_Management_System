@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const { protect, authorize } = require("../middleware/authMiddleware");
-const { getChefDashboard } = require("../controllers/chefController");
+const { getDeliveryDashboard, getDeliveryOrders } = require("../controllers/deliveryController");
 
 router.get(
   "/dashbourd",
   protect,
   authorize("delivery"),
-  getChefDashboard
+  getDeliveryDashboard
 );
 
+router.get("/orders", protect, authorize("delivery"), getDeliveryDashboard);
 
 module.exports = router;

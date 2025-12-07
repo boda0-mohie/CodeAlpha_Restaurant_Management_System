@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { protect, authorize } = require("../middleware/authMiddleware");
-const { getChefDashboard } = require("../controllers/chefController");
+const { getChefDashboard, getChefOrders } = require("../controllers/chefController");
 
 router.get(
   "/dashbourd",
@@ -11,5 +11,6 @@ router.get(
   getChefDashboard
 );
 
+router.get("/orders", protect, authorize("chef"), getChefOrders);
 
 module.exports = router;

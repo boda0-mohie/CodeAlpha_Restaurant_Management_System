@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true, 
+    required: true,
   },
 
   items: [
@@ -29,7 +29,14 @@ const orderSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["pending", "preparing", "ready", "on_the_way", "delivered", "completed"],
+    enum: [
+      "pending",
+      "preparing",
+      "ready",
+      "on_the_way",
+      "delivered",
+      "completed",
+    ],
     default: "pending",
   },
 
@@ -37,6 +44,18 @@ const orderSchema = new mongoose.Schema({
     type: String,
     enum: ["pending", "paid", "failed"],
     default: "pending",
+  },
+
+  assignedChef: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
+
+  assignedDelivery: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
   },
 
   createdAt: {

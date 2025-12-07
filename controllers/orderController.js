@@ -24,7 +24,7 @@ const createOrder = async (req, res) => {
     }
 
     const order = await Order.create({
-      user: req.user.id, 
+      user: req.user.id,
       items,
       totalPrice,
     });
@@ -41,7 +41,6 @@ const createOrder = async (req, res) => {
     res.status(500).json({ err: err.message });
   }
 };
-
 
 // Get all orders
 const getOrders = async (req, res) => {
@@ -78,15 +77,22 @@ const updateOrderStatus = async (req, res) => {
     const { status } = req.body;
     // console.log(req.body)
 
-    
-
     const order = await Order.findById(req.params.id);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    if (!["pending", "preparing", "ready", "on_the_way", "delivered", "completed"].includes(status)) {
+    if (
+      ![
+        "pending",
+        "preparing",
+        "ready",
+        "on_the_way",
+        "delivered",
+        "completed",
+      ].includes(status)
+    ) {
       return res.status(400).json({ message: "Invalid status" });
     }
 
@@ -99,9 +105,62 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+const assignChef = async (req, res) => {
+  try {
+    const { chefId } = req.body;
+
+    // Check chef exists
+    const chef = await User.findById(chefId);
+    if (!chef || chef.role !== "chef") {
+      return res.status(400).json({ message: "Invalid chef ID" });
+    }
+
+    // Check order
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    order.assignedChef = chefId;
+    await order.save();
+
+    res.status(200).json({
+      message: "Chef assigned successfully",
+      order,
+    });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
+const assignDelivery = async (req, res) => {
+  try {
+    const {deliveryId} = req.body;
+
+    const delivery = await User.findById(deliveryId);
+
+    if (!delivery || delivery.role !== "delivery")
+      return res.status(404).json({ message: "This Id Not Valid" });
+
+    const order = await Order.findById(req.params.id);
+    if (!order)
+      return res.status(404).json({ message: "This Order Not Found" });
+
+    order.assignedDelivery = deliveryId;
+
+    await order.save();
+
+    res
+      .status(200)
+      .json({ message: "Order Assingned Successfully To the delivery", order });
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getOrders,
   getOrderById,
   updateOrderStatus,
+  assignChef,
+  assignDelivery,
 };
