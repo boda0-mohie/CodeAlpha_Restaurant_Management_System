@@ -17,8 +17,6 @@ const app = express();
 // ----------------------------
 // 1) STRIPE WEBHOOK (raw body)
 // ----------------------------
-// مهم جداً يكون قبل express.json()
-// وده بيمر على الراوت بتاع /api/payments/webhook بس
 app.post(
   "/api/payments/webhook",
   express.raw({ type: "application/json" }),
@@ -39,7 +37,7 @@ connectDB();
 // 4) Normal API Routes
 // ----------------------------
 app.use("/api/auth", authRoutes);
-app.use("/api/payments", paymentRoutes); // safe لأن webhook فوق
+app.use("/api/payments", paymentRoutes); 
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/chef", chefRoutes);

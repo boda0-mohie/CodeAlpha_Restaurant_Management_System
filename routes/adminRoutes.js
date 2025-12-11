@@ -8,6 +8,7 @@ const {
   createUserByAdmin,
   getAdminDashboard
 } = require("../controllers/adminController");
+const { getAdminAnalytics } = require("../controllers/adminAnalyticsController");
 
 // Admin Routes
 router.get("/users", protect, authorize("admin"), getAllUsers);
@@ -22,5 +23,7 @@ router.get(
   authorize("admin"),
   getAdminDashboard
 );
+
+router.get("/analytics", protect, authorize("admin"), getAdminAnalytics);
 
 module.exports = router;
